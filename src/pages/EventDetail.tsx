@@ -1,4 +1,5 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
+import TicketModal from "../components/TicketModal";
 import {
   ChevronLeft,
   MapPin,
@@ -66,6 +67,7 @@ export default function EventDetail() {
     "getting-there" | "what-to-expect" | "policies"
   >("getting-there");
   const [isSaved, setIsSaved] = useState(false);
+  const [showTicket, setShowTicket] = useState(false);
 
   const event = getEventById(eventId || "");
 
@@ -77,7 +79,7 @@ export default function EventDetail() {
             Event Not Found
           </h1>
           <p className="text-xl text-gray-600 mb-8">
-            The event you're looking for doesn't exist or has been removed.
+            {"The event you're looking for doesn't exist or has been removed."}
           </p>
           <button
             onClick={() => navigate("/")}
@@ -132,6 +134,7 @@ export default function EventDetail() {
           <span className="text-[#1e293b] font-semibold">{event.title}</span>
         </nav>
 
+        {/* Hero */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <div className="md:col-span-2">
             <h1 className="text-5xl font-bold text-[#1e293b] mb-4">
@@ -176,6 +179,7 @@ export default function EventDetail() {
           </div>
         </div>
 
+        {/* Sticky CTA bar */}
         <div className="sticky top-20 bg-white border-b border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-4 mb-8 shadow-sm">
           <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4">
             <div className="flex-1 min-w-[200px]">
@@ -185,26 +189,20 @@ export default function EventDetail() {
               </div>
             </div>
             <div className="flex gap-3 flex-wrap">
-              {event.ticketUrl ? (
-                <a
-                  href={event.ticketUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition flex items-center space-x-2"
-                >
-                  <span>Get Tickets</span>
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              ) : (
-                <button className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition flex items-center space-x-2">
-                  <Heart className="w-5 h-5" />
-                  <span>Save Event</span>
-                </button>
-              )}
+              {/* Always show Get Tickets — opens the modal */}
+              <button
+                onClick={() => setShowTicket(true)}
+                className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition flex items-center space-x-2"
+              >
+                <span>Get Tickets</span>
+                <ExternalLink className="w-4 h-4" />
+              </button>
+
               <button className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-[#1e293b] rounded-lg font-semibold transition flex items-center space-x-2">
                 <Share2 className="w-5 h-5" />
                 <span>Share</span>
               </button>
+
               <button
                 onClick={() => setIsSaved(!isSaved)}
                 className={`px-4 py-3 rounded-lg font-semibold transition ${
@@ -221,6 +219,7 @@ export default function EventDetail() {
           </div>
         </div>
 
+        {/* Info grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           <div className="flex items-start space-x-4">
             <Calendar className="w-8 h-8 text-green-600 flex-shrink-0 mt-1" />
@@ -303,6 +302,7 @@ export default function EventDetail() {
           </div>
         </div>
 
+        {/* About */}
         <div className="bg-gray-50 rounded-xl p-8 mb-12">
           <h2 className="text-3xl font-bold text-[#1e293b] mb-4">
             About This Event
@@ -315,6 +315,7 @@ export default function EventDetail() {
           </p>
         </div>
 
+        {/* Tabs */}
         <div className="mb-12">
           <h2 className="text-3xl font-bold text-[#1e293b] mb-6">
             Event Details
@@ -441,14 +442,16 @@ export default function EventDetail() {
                   Refund Policy
                 </h3>
                 <p className="text-gray-700">
-                  Please refer to the ticket vendor's refund policy. Contact the
-                  organizer for event-specific policies.
+                  {
+                    "Please refer to the ticket vendor's refund policy. Contact the organizer for event-specific policies."
+                  }
                 </p>
               </div>
             </div>
           )}
         </div>
 
+        {/* Organizer */}
         <div className="bg-white border border-gray-200 rounded-xl p-8 mb-12">
           <h2 className="text-3xl font-bold text-[#1e293b] mb-6">Organizer</h2>
           <div className="space-y-4">
@@ -487,6 +490,7 @@ export default function EventDetail() {
           </div>
         </div>
 
+        {/* Similar events */}
         {similarEvents.length > 0 && (
           <div className="mb-12">
             <h2 className="text-3xl font-bold text-[#1e293b] mb-8">
@@ -500,6 +504,11 @@ export default function EventDetail() {
           </div>
         )}
       </div>
+
+      {/* Ticket Modal */}
+      {showTicket && (
+        <TicketModal event={event} onClose={() => setShowTicket(false)} />
+      )}
     </div>
   );
 }
